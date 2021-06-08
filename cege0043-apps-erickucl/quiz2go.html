@@ -1,0 +1,247 @@
+<DOCTYPE html>
+    <html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <!-- custom fonts and styles for the bootstrap template -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" type="text/css" rel="stylesheet">
+        <!-- custom bootstrap template link -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+
+        <!-- custom CSS for this template that is stored locally -->
+        <link href="css/sb-admin-2.css" type="text/css" rel="stylesheet">
+        <!-- fonts and icons -->
+        <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+        <!-- the following links incorporate the CSS required for custom icon creation -->
+        <!--<link rel="stylesheet" href="css/ionicons.min.css">-->
+        <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/leaflet.awesome-markers.css">
+
+        <!-- map loader -->
+        <!-- js loader for the Leaflet Map -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-
+    wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin="anonymous" />
+        <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin="anonymous"></script>
+
+        <!-- adjust map size -->
+        <style type="text/css">
+            #mapid { height: 100%; }
+        </style>
+
+        <!-- AJAX request call-->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+        <!-- D3 graph-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <title>WEB AND MOBILE QUIZ</title>
+    </head>
+
+    <body id="page-top">
+        <!-- Bootstrap core JavaScript-->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <!-- adapted from: https://blackrockdigital.github.io/startbootstrap-sb-admin-2/ -->
+
+        <!-- main div -->
+        <div id="wrapper">
+
+            <!-- End of Main Content -->
+            <!-- Sidebar -->
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center">
+                    <div class="sidebar-brand-text mx-3 text-white"><img src="res/logo.png" alt="London Quiz2Go" /></div>
+                </a>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- RESPONSIVE CUSTOM:
+				class="nav-item d-none d-lg-block" FOR DESKTOP
+				class="nav-item d-lg-none" SMALL
+				class="nav-item" ANYWHERE -->
+
+                <!-- MENU ACCORDEON CREATION -->
+
+                <!-- DESKTOP PART: SETTINGS -->
+                <!-- QUESTIONS SETTINGS -->
+
+                <!-- Question creation menu- Current Location -->
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="currentPosition();" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Current Location:</span>
+                    </a>
+                </li>
+
+                <!-- Question display menu- Questions Accordeon -->
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Questions:</span>
+                    </a>
+
+                    <!-- Question display menu- add/load/delete questions -->
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#" onclick="addQuestion()" ;>Add Question:</a>
+                            <a class="collapse-item" href="#" onclick="clean(),getQuizQuestionsLayer('questionComponent','quiz')">Load Questions:</a>
+                            <a class="collapse-item" href="#" onclick="clean(),getQuizQuestionsLayer('questionComponent','quiz'), alert('Select a Question Point and press Delete.')">Delete Questions:</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Statistics display menu- -->
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Statistics:</span>
+                    </a>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#" onclick="partRate1()">User Participation Rate:</a>
+                            <a class="collapse-item" href="#" onclick="partRate2()">All Participation Rate:</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- questions map layer display menu- -->
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Questions Map Layers:</span>
+                    </a>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#" onclick="getQuizQuestionsLayer('questionComponent','lastWeek')">Questions added last week:</a>
+                            <a class="collapse-item" href="#" onclick="alert('activate current location first'),currentPosition(),getQuizQuestionsLayer('questionComponent','5Closest')">5 closest questions:</a>
+                            <a class="collapse-item" href="#" onclick="hardestQuestionsList()">5 most difficult questions:</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Question creation menu- clean map -->
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="clean();" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Clear map:</span>
+                    </a>
+                </li>
+
+                <!-- Help for Question Component -->
+                <li class="nav-item d-none d-lg-block">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="openHelp('helpquestionsc'),window.open(openHelpURL);" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+
+                <!-- MOBILE PART: APP -->
+                <!-- QUIZ MOBILE -->
+
+                <!-- Load questions -->
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="currentPosition(),getQuizQuestionsLayer('quizComponent','quiz');" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Load Questions:</span>
+                    </a>
+                </li>
+
+                <!-- start quiz menu -->
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="startQuiz();" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>START QUIZ!</span>
+                    </a>
+                </li>
+
+                <!-- statistics quiz part -->
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Statistics:</span>
+                    </a>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">User Ranking:</h6>
+                            <a class="collapse-item" id="rank" href="#" onclick="userRankingAns(httpsPortNumberAPI);">click here to load <br> User Ranking:</a>
+                            <a class="collapse-item" href="#" onclick="boardRank()">Score Position:</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- questions map layer  /ON WORK -->
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Advanced questions layer:</span>
+                    </a>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" id="rank" href="#" onclick="getQuizQuestionsLayer('lastComponent','lastQuestions');">Last 5 answered<br>questions by current user:</a>
+                            <a class="collapse-item" href="#" onclick="startQuizNotCompleted();">Not completed questions:</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- quiz component - clean map -->
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="clean();" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Clear map:</span>
+                    </a>
+                </li>
+
+                <!-- Help for quiz Component -->
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="" onclick="openHelp('helpquizc'),window.open(openHelpURL);" aria-expanded="true" aria-controls="collapseOne">
+                        <!-- the next line is the cog image -->
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+
+            </ul>
+            <!-- End of Sidebar -->
+
+            <!-- map -->
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="mapid">
+                </div>
+
+            </div>
+
+        </div>
+        <!-- end of wrapper -->
+
+        <!-- file links-->
+        <script src="js/leaflet.awesome-markers.js"></script>
+        <script src="js/utilities.js"></script>
+        <script src="js/sb-admin-2.js"></script>
+        <script src="js/m0LoadMap.js"></script>
+        <script src="js/m1CurrentLocation.js"></script>
+        <script src="js/m2AddQuestion.js"></script>
+        <script src="js/m3Quiz2goQuestions.js"></script>
+        <script src="js/m4DeleteQuestion.js"></script>
+        <script src="js/m5AnswerQuestions.js"></script>
+        <script src="js/m6StartQuiz.js"></script>
+        <script src="js/m7StatisticsAF1.js"></script>
+        <script src="js/m8StatisticsAF2.js"></script>
+        <script src="js/m9QuestionsAF2.js"></script>
+        <script src="js/zOpenHelp.js"></script>
+
+    </body>
+
+    </html>
